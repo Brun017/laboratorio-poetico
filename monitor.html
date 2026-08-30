@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Monitor - Laboratorio Poético</title>
+  <style>
+    :root {
+      --bg-color: #0f1115;
+      --text-color: #f4f6f8;
+      --accent-color: #2b6cb0;
+      --border-color: #2a303c;
+      --dim-text: #8b9bb4;
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-serif: 'Georgia', serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      font-family: var(--font-mono);
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      box-sizing: border-box;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 2px dashed var(--border-color);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--accent-color);
+    }
+
+    .subtitle {
+      color: var(--dim-text);
+      font-size: 1.2rem;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .archive-list {
+      flex-grow: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      padding-right: 20px;
+    }
+
+    /* Ocultar barra de scroll para que quede más limpio en la pantalla */
+    .archive-list::-webkit-scrollbar {
+      display: none;
+    }
+
+    .archive-item {
+      background: #181b21;
+      padding: 30px;
+      border-left: 4px solid var(--accent-color);
+      border-radius: 0 8px 8px 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      animation: fadeIn 1s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .archive-item-meta {
+      font-size: 1.2rem;
+      color: var(--dim-text);
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .archive-item-meta strong {
+      color: var(--text-color);
+    }
+
+    .archive-item-body {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.8rem;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--dim-text);
+      font-size: 1.5rem;
+      margin-top: 20vh;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>⚗️ Laboratorio Poético</h1>
+    <div class="subtitle">Archivo de Ensayos en Tiempo Real</div>
+  </header>
+
+  <div id="archiveList" class="archive-list">
+    <!-- Los poemas aparecerán aquí -->
+  </div>
+
+  <script>
+    const archiveList = document.getElementById('archiveList');
+    let lastRenderedCount = -1;
+
+    function renderArchive() {
+      const archivoGuardado = localStorage.getItem('lab_poetico_v2_archivo');
+      const historialPoemas = archivoGuardado ? JSON.parse(archivoGuardado) : [];
+
+      // Solo actualiza la pantalla si hay un poema nuevo para evitar parpadeos
+      if (historialPoemas.length === lastRenderedCount) return;
+      lastRenderedCount = historialPoemas.length;
+
+      archiveList.innerHTML = '';
+
+      if (historialPoemas.length === 0) {
+        archiveList.innerHTML = '<div class="empty-state">Esperando el primer ensayo del día...</div>';
+        return;
+      }
+
+      historialPoemas.forEach((poema, index) => {
+        const item = document.createElement('div');
+        item.className = 'archive-item';
+        
+        // Destacar visualmente el último poema generado
+        if (index === 0) {
+          item.style.borderColor = '#ffffff';
+          item.style.background = '#1e252b';
+        }
+
+        item.innerHTML = `
+          <div class="archive-item-meta">
+            <span>Firma: <strong>${poema.autor}</strong></span>
+            <span>${poema.fecha}</span>
+          </div>
+          <div class="archive-item-body">${poema.texto}</div>
+        `;
+        archiveList.appendChild(item);
+      });
+    }
+
+    // Ejecuta la función de renderizado una vez y luego la repite cada 1 segundo (1000ms)
+    renderArchive();
+    setInterval(renderArchive, 1000);
+  </script>
+</body>
+</html>
