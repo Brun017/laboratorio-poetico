@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laboratorio Poético</title>
+  <style>
+    :root {
+      --bg-color: #f4f6f8;
+      --card-bg: #ffffff;
+      --text-color: #1e252b;
+      --accent-color: #2b6cb0;
+      --border-color: #d8e0e8;
+      --dim-text: #64748b;
+      --font-mono: 'Courier New', Courier, monospace;
+      --font-serif: 'Georgia', serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      background-image: radial-gradient(var(--border-color) 1px, transparent 0);
+      background-size: 20px 20px;
+      color: var(--text-color);
+      font-family: var(--font-mono);
+      margin: 0;
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      max-width: 650px;
+      width: 100%;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 25px;
+      background: var(--card-bg);
+      padding: 20px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+
+    .lab-icon {
+      font-size: 2.2rem;
+      margin-bottom: 5px;
+      display: inline-block;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin: 0;
+      letter-spacing: 3px;
+      color: var(--text-color);
+      text-transform: uppercase;
+    }
+
+    .btn-archive-toggle {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--accent-color);
+      padding: 8px 14px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: all 0.2s;
+    }
+
+    .btn-archive-toggle:hover {
+      border-color: var(--accent-color);
+      background-color: rgba(43, 108, 176, 0.05);
+    }
+
+    .panel {
+      background: var(--card-bg);
+      padding: 30px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+
+    .step {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--dim-text);
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+
+    select, input {
+      padding: 12px 15px;
+      font-size: 0.95rem;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      background-color: #fafbfc;
+      color: var(--text-color);
+      font-family: var(--font-mono);
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    select:focus, input:focus {
+      border-color: var(--accent-color);
+      background-color: #ffffff;
+      box-shadow: 0 0 0 3px rgba(43, 108, 176, 0.1);
+    }
+
+    .btn-main {
+      width: 100%;
+      padding: 16px;
+      background-color: var(--accent-color);
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      font-family: var(--font-mono);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      margin-top: 10px;
+    }
+
+    .btn-main:disabled {
+      background-color: #cbd5e1;
+      cursor: not-allowed;
+    }
+
+    .btn-main:hover:not(:disabled) {
+      background-color: #1a4971;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      padding: 12px;
+      background-color: transparent;
+      color: var(--dim-text);
+      border: 1px dashed var(--border-color);
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 25px;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .qr-container {
+      margin-top: 25px;
+      padding-top: 20px;
+      border-top: 1px dashed var(--border-color);
+      text-align: center;
+    }
+
+    .qr-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--dim-text);
+      margin-bottom: 12px;
+    }
+
+    .qr-image {
+      width: 160px;
+      height: 160px;
+      border: 1px solid var(--border-color);
+      padding: 5px;
+      background: white;
+      border-radius: 4px;
+    }
+
+    .lab-loader {
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .flask-animation {
+      font-size: 3.5rem;
+      display: inline-block;
+      animation: distill 1.8s infinite ease-in-out;
+    }
+
+    @keyframes distill {
+      0% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(-10deg) scale(1.1); }
+      75% { transform: rotate(10deg) scale(1.1); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+
+    .poem-card {
+      padding: 10px;
+    }
+
+    .poem-body {
+      font-family: var(--font-serif);
+      font-size: 1.25rem;
+      line-height: 2;
+      margin: 10px 0;
+      font-style: italic;
+    }
+
+    .poem-line {
+      margin-bottom: 22px;
+      color: var(--text-color);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: dropIn 0.8s forwards ease-out;
+    }
+
+    @keyframes dropIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .info-link {
+      color: var(--dim-text);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-family: var(--font-mono);
+      margin-left: 8px;
+      font-style: normal;
+      transition: color 0.2s;
+    }
+
+    .info-link:hover {
+      color: var(--accent-color);
+    }
+
+    .archive-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 17, 21, 0.7);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+      z-index: 100;
+    }
+
+    .archive-content {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      max-width: 600px;
+      width: 100%;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .archive-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 15px;
+      margin-bottom: 15px;
+    }
+
+    .archive-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .btn-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--dim-text);
+    }
+
+    .archive-list {
+      overflow-y: auto;
+      padding-right: 10px;
+    }
+
+    .archive-item {
+      padding: 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin-bottom: 15px;
+      background: #fafbfc;
+    }
+
+    .archive-item-meta {
+      font-size: 0.75rem;
+      color: var(--dim-text);
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .archive-item-body {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      white-space: pre-line;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="lab-icon">⚗️</div>
+      <h1>Laboratorio Poético</h1>
+      <button id="openArchiveBtn" class="btn-archive-toggle">📁 Ver Archivo de Ensayos</button>
+    </header>
+
+    <main class="panel">
+      <form id="labForm">
+        <section class="step">
+          <label for="themeSelect">[01] Colección de destino:</label>
+          <select id="themeSelect">
+            <option value="">-- Seleccionar temática --</option>
+            <option value="pensamiento">Pensamiento</option>
+            <option value="miedo">Miedo</option>
+            <option value="cuerpo">Cuerpo</option>
+            <option value="futuro">Futuro</option>
+            <option value="deseo">Deseo</option>
+          </select>
+        </section>
+
+        <section class="step">
+          <label for="userInput">[02] Entrada de texto:</label>
+          <input type="text" id="userInput" placeholder="Escribe tu frase..." autocomplete="off" />
+        </section>
+
+        <section class="step">
+          <label for="userAuthor">[03] Firma de autoría:</label>
+          <input type="text" id="userAuthor" placeholder="Tu nombre o seudónimo..." autocomplete="off" />
+        </section>
+
+        <button type="button" id="generateBtn" class="btn-main" disabled>Combinar</button>
+      </form>
+
+      <div id="loadingStatus" class="lab-loader hidden">
+        <div class="flask-animation">🧪</div>
+      </div>
+
+      <section id="poemContainer" class="poem-card hidden">
+        <div id="poemText" class="poem-body"></div>
+        <div id="qrContainer" class="qr-container hidden">
+          <div class="qr-title">// Escanea para llevarte este poema y sus referencias</div>
+          <img id="qrImage" class="qr-image" src="" alt="Código QR del Poema" />
+        </div>
+        <button type="button" id="resetBtn" class="btn-secondary hidden">Nueva combinación</button>
+      </section>
+    </main>
+  </div>
+
+  <div id="archiveModal" class="archive-modal hidden">
+    <div class="archive-content">
+      <div class="archive-header">
+        <h2>Registro de Ensayos</h2>
+        <button id="closeArchiveBtn" class="btn-close">&times;</button>
+      </div>
+      <div id="archiveList" class="archive-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // BASE DE DATOS REAL (Ortografía corregida)
+    const coleccionesPorDefecto = {
+      pensamiento: [
+        { text: "No hay locura de las bestias de la tierra que no sea infinitamente superada por la insensatez de los hombres", link: "https://es.wikipedia.org/wiki/Moby_Dick" },
+        { text: "La razón de la sinrazón que a mi razón se hace, de tal manera mi razón enflaquece...", link: "https://es.wikipedia.org/wiki/Don_Quijote_de_la_Mancha" },
+        { text: "No hay mayor dolor que recordar los tiempos felices en la miseria.", link: "https://es.wikipedia.org/wiki/Divina_comedia" },
+        { text: "Aquí, al final de todas las cosas", link: "https://es.wikipedia.org/wiki/El_Se%C3%B1or_de_los_Anillos" },
+        { text: "Todo lo que vemos o parecemos es solo un sueño dentro de un sueño.", link: "https://es.wikipedia.org/wiki/Edgar_Allan_Poe" },
+        { text: "Abril es el mes más cruel", link: "https://es.wikipedia.org/wiki/La_tierra_bald%C3%ADa" },
+        { text: "Su mente razonaba con claridad, pero atrapada en la prisión de aquel cuerpo extraño.", link: "https://es.wikipedia.org/wiki/La_metamorfosis" }
+      ],
+      miedo: [
+        { text: "Nadie lo vio desembarcar en la unánime noche.", link: "https://es.wikipedia.org/wiki/Ficciones" },
+        { text: "Y si miras largamente al abismo, el abismo también mira dentro de ti.", link: "https://es.wikipedia.org/wiki/M%C3%A1s_all%C3%A1_del_bien_y_del_mal" },
+        { text: "Semejante a la noche avanzaba el dios.", link: "https://es.wikipedia.org/wiki/Il%C3%ADada" },
+        { text: "Nadie es mi nombre", link: "https://es.wikipedia.org/wiki/Odisea" },
+        { text: "Ladran, Sancho, señal que cabalgamos", link: "https://es.wikipedia.org/wiki/Don_Quijote_de_la_Mancha" },
+        { text: "Abandonad toda esperanza los que aquí entráis", link: "https://es.wikipedia.org/wiki/Divina_comedia" },
+        { text: "¿Quién ha dicho que sólo pueden hacernos sufrir los malvados?", link: "https://es.wikipedia.org/wiki/Sobre_h%C3%A9roes_y_tumbas" },
+        { text: "Te mostraré el miedo en un puñado de polvo", link: "https://es.wikipedia.org/wiki/La_tierra_bald%C3%ADa" }
+      ],
+      cuerpo: [
+        { text: "Cubrió la sombra sus ojos y se desplomó como una torre en el fiero combate.", link: "https://es.wikipedia.org/wiki/Il%C3%ADada" },
+        { text: "Detente, sombra de mi bien esquivo, imagen del hechizo que más quiero.", link: "https://es.wikipedia.org/wiki/Sor_Juana_In%C3%A9s_de_la_Cruz" },
+        { text: "Yo soy toro en mi rodeo y torazo en rodeo ajeno", link: "https://es.wikipedia.org/wiki/El_Gaucho_Mart%C3%ADn_Fierro" },
+        { text: "Con el corazón latiendo con fuerza bajo las maderas desgastadas del piso.", link: "https://es.wikipedia.org/wiki/Edgar_Allan_Poe" },
+        { text: "El cuerpo no es más que una bolsa de carne cansada que arrastramos por las calles.", link: "https://es.wikipedia.org/wiki/Viaje_al_fin_de_la_noche" },
+        { text: "Un día se encontró en su cama convertido en un monstruoso insecto.", link: "https://es.wikipedia.org/wiki/La_metamorfosis" },
+        { text: "Tantas veces me mataron, tantas veces me morí, sin embargo estoy aquí resucitando.", link: "https://es.wikipedia.org/wiki/Mercedes_Sosa" }
+      ],
+      futuro: [
+        { text: "Un mismo destino aguarda al que se queda en la retaguardia y al que combate con ardor.", link: "https://es.wikipedia.org/wiki/Il%C3%ADada" },
+        { text: "Caminante no hay camino, se hace camino al andar", link: "https://es.wikipedia.org/wiki/Antonio_Machado" },
+        { text: "El camino sigue y sigue, desde la puerta donde comenzó.", link: "https://es.wikipedia.org/wiki/El_Se%C3%B1or_de_los_Anillos" },
+        { text: "La vida es tan corta y el oficio de vivir tan difícil, que cuando uno empieza a aprenderlo, ya hay que morirse.", link: "https://es.wikipedia.org/wiki/Sobre_h%C3%A9roes_y_tumbas" },
+        { text: "Sin punto ni rumbo fijo en aquella inmensidá", link: "https://es.wikipedia.org/wiki/El_Gaucho_Mart%C3%ADn_Fierro" },
+        { text: "Nuestra sociedad es una promesa no cumplida, una esperanza sin garantía.", link: "https://es.wikipedia.org/wiki/Los_despose%C3%ADdos" },
+        { text: "Hay un fusilado que vive", link: "https://es.wikipedia.org/wiki/Operaci%C3%B3n_Masacre" }
+      ],
+      deseo: [
+        { text: "Que el cielo exista aunque mi lugar sea el infierno", link: "https://es.wikipedia.org/wiki/Ficciones" },
+        { text: "Constante adoro a quien mi amor maltrata; maltrato a quien mi amor busca constante.", link: "https://es.wikipedia.org/wiki/Sor_Juana_In%C3%A9s_de_la_Cruz" },
+        { text: "Cantando me he de morir, cantando me han de enterrar.", link: "https://es.wikipedia.org/wiki/El_Gaucho_Mart%C3%ADn_Fierro" },
+        { text: "¡Como si se pudiese elegir en el amor, como si no fuera un rayo que te parte los huesos y te deja estaqueado en el medio del patio!", link: "https://es.wikipedia.org/wiki/Rayuela_(novela)" },
+        { text: "Añorar un refugio antes de que el amanecer desnude toda la miseria.", link: "https://es.wikipedia.org/wiki/Viaje_al_fin_de_la_noche" }
+      ]
+    };
+
+    // Nuevas claves para limpiar el almacenamiento en la computadora actual
+    const dbGuardada = localStorage.getItem('lab_poetico_v2_db');
+    const colecciones = dbGuardada ? JSON.parse(dbGuardada) : coleccionesPorDefecto;
+
+    const archivoGuardado = localStorage.getItem('lab_poetico_v2_archivo');
+    const historialPoemas = archivoGuardado ? JSON.parse(archivoGuardado) : [];
+
+    const labForm = document.getElementById('labForm');
+    const themeSelect = document.getElementById('themeSelect');
+    const userInput = document.getElementById('userInput');
+    const userAuthor = document.getElementById('userAuthor');
+    const generateBtn = document.getElementById('generateBtn');
+    const loadingStatus = document.getElementById('loadingStatus');
+    const poemContainer = document.getElementById('poemContainer');
+    const poemText = document.getElementById('poemText');
+    const resetBtn = document.getElementById('resetBtn');
+
+    const qrContainer = document.getElementById('qrContainer');
+    const qrImage = document.getElementById('qrImage');
+    const openArchiveBtn = document.getElementById('openArchiveBtn');
+    const closeArchiveBtn = document.getElementById('closeArchiveBtn');
+    const archiveModal = document.getElementById('archiveModal');
+    const archiveList = document.getElementById('archiveList');
+
+    function countWords(str) {
+      const cleanStr = str.trim();
+      if (cleanStr === '') return 0;
+      return cleanStr.split(/\s+/).length;
+    }
+
+    function checkInputs() {
+      const ready = themeSelect.value !== "" && 
+                    userInput.value.trim() !== "" && 
+                    userAuthor.value.trim() !== "";
+      generateBtn.disabled = !ready;
+    }
+
+    themeSelect.addEventListener('change', checkInputs);
+    userInput.addEventListener('input', checkInputs);
+    userAuthor.addEventListener('input', checkInputs);
+
+    function getMatchingItem(array, targetWords) {
+      const exactOrClose = array.filter(item => {
+        const w = countWords(item.text);
+        return Math.abs(w - targetWords) <= 1;
+      });
+
+      const candidateList = exactOrClose.length > 0 ? exactOrClose : array;
+      return candidateList[Math.floor(Math.random() * candidateList.length)];
+    }
+
+    generateBtn.addEventListener('click', () => {
+      const selectedTheme = themeSelect.value;
+      const text = userInput.value.trim();
+      const author = userAuthor.value.trim();
+      const userWordCount = countWords(text);
+
+      const entradaUsuario = {
+        text: text,
+        link: "https://es.wikipedia.org/wiki/Oulipo"
+      };
+
+      colecciones[selectedTheme].push(entradaUsuario);
+      localStorage.setItem('lab_poetico_v2_db', JSON.stringify(colecciones));
+
+      labForm.classList.add('hidden');
+      loadingStatus.classList.remove('hidden');
+      poemText.innerHTML = '';
+      qrContainer.classList.add('hidden');
+      resetBtn.classList.add('hidden');
+
+      const ordenTemas = ['pensamiento', 'miedo', 'cuerpo', 'futuro', 'deseo'];
+      
+      const seleccionados = ordenTemas.map(tema => {
+        if (tema === selectedTheme) {
+          return entradaUsuario; 
+        } else {
+          return getMatchingItem(colecciones[tema], userWordCount); 
+        }
+      });
+
+      const poemaCompletoTexto = seleccionados.map(item => item.text).join('\n');
+      const registroPoema = {
+        autor: author,
+        fecha: new Date().toLocaleDateString('es-ES', { hour: '2-digit', minute: '2-digit' }),
+        texto: poemaCompletoTexto
+      };
+      
+      historialPoemas.unshift(registroPoema);
+      localStorage.setItem('lab_poetico_v2_archivo', JSON.stringify(historialPoemas));
+
+      let textoQR = `LABORATORIO POÉTICO\nFicha de Ensayo | Autor/a: ${author}\n----------------------------------\n\n`;
+      seleccionados.forEach((item) => {
+        textoQR += `"${item.text}"\nRef: ${item.link}\n\n`;
+      });
+      textoQR += `----------------------------------`;
+
+      const urlQR = `https://quickchart.io/qr?text=${encodeURIComponent(textoQR)}&size=300`;
+      qrImage.src = urlQR;
+
+      setTimeout(() => {
+        loadingStatus.classList.add('hidden');
+        poemContainer.classList.remove('hidden');
+
+        seleccionados.forEach((item, index) => {
+          setTimeout(() => {
+            const p = document.createElement('p');
+            p.className = 'poem-line';
+            p.innerText = item.text;
+
+            const a = document.createElement('a');
+            a.href = item.link;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            a.className = 'info-link';
+            a.innerHTML = ' ↗';
+            p.appendChild(a);
+
+            poemText.appendChild(p);
+          }, index * 950);
+        });
+
+        setTimeout(() => {
+          qrContainer.classList.remove('hidden');
+          resetBtn.classList.remove('hidden');
+        }, seleccionados.length * 950 + 200);
+
+      }, 2200);
+    });
+
+    function renderArchive() {
+      archiveList.innerHTML = '';
+      if (historialPoemas.length === 0) {
+        archiveList.innerHTML = '<p style="text-align:center; color: var(--dim-text);">No hay ensayos registrados en esta muestra aún.</p>';
+        return;
+      }
+
+      historialPoemas.forEach(poema => {
+        const item = document.createElement('div');
+        item.className = 'archive-item';
+        item.innerHTML = `
+          <div class="archive-item-meta">
+            <span>Firma: <strong>${poema.autor}</strong></span>
+            <span>${poema.fecha}</span>
+          </div>
+          <div class="archive-item-body">${poema.texto}</div>
+        `;
+        archiveList.appendChild(item);
+      });
+    }
+
+    openArchiveBtn.addEventListener('click', () => {
+      renderArchive();
+      archiveModal.classList.remove('hidden');
+    });
+
+    closeArchiveBtn.addEventListener('click', () => {
+      archiveModal.classList.add('hidden');
+    });
+
+    resetBtn.addEventListener('click', () => {
+      userInput.value = '';
+      userAuthor.value = '';
+      themeSelect.value = '';
+      checkInputs();
+
+      poemContainer.classList.add('hidden');
+      labForm.classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
