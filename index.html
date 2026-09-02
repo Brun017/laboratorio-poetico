@@ -531,14 +531,17 @@
       historialPoemas.unshift(registroPoema);
       localStorage.setItem('lab_poetico_v2_archivo', JSON.stringify(historialPoemas));
 
-      let textoQR = `LABORATORIO POÉTICO\nFicha de Ensayo | Autor/a: ${author}\n----------------------------------\n\n`;
-      seleccionados.forEach((item) => {
-        textoQR += `"${item.text}"\nRef: ${item.link}\n\n`;
-      });
-      textoQR += `----------------------------------`;
+     // GENERACIÓN DEL TEXTO PARA EL CÓDIGO QR (OPTIMIZADO)
+let textoQR = `LABORATORIO POÉTICO\n`;
+textoQR += `Ficha de Ensayo | Autor/a: ${author}\n\n`;
 
-      const urlQR = `https://quickchart.io/qr?text=${encodeURIComponent(textoQR)}&size=300`;
-      qrImage.src = urlQR;
+seleccionados.forEach((item, index) => {
+  textoQR += `${index + 1}. "${item.text}"\n`;
+});
+
+// Parámetros agregados: ecLevel=L (reduce la densidad de puntos) y margin=1
+const urlQR = `https://quickchart.io/qr?text=${encodeURIComponent(textoQR)}&size=300&ecLevel=L&margin=1`;
+qrImage.src = urlQR;
 
       setTimeout(() => {
         loadingStatus.classList.add('hidden');
