@@ -445,9 +445,7 @@
     };
 
     // Nuevas claves para limpiar el almacenamiento en la computadora actual
-    const dbGuardada = localStorage.getItem('lab_poetico_v2_db');
-    const colecciones = dbGuardada ? JSON.parse(dbGuardada) : coleccionesPorDefecto;
-
+    const colecciones = coleccionesPorDefecto;
     const archivoGuardado = localStorage.getItem('lab_poetico_v2_archivo');
     const historialPoemas = archivoGuardado ? JSON.parse(archivoGuardado) : [];
 
